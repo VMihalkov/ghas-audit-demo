@@ -1,0 +1,20 @@
+{
+  "name": "payment-api",
+  "version": "1.0.0",
+  "description": "Sample vulnerable payment API for GHAS demonstration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.2",
+    "lodash": "4.17.4",
+    "jsonwebtoken": "^8.5.1",
+    "bcrypt": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

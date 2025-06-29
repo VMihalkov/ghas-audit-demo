@@ -1,0 +1,138 @@
+name: GHAS Security Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      audit_scope:
+        description: 'Scope of audit (all, critical, custom)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - critical
+          - custom
+      custom_repos:
+        description: 'Custom repositories to audit (comma-separated, only for custom scope)'
+        required: false
+        type: string
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ghas-audit.yml'
+
+permissions:
+  contents: read
+  security-events: read
+  issues: write
+  discussions: write
+
+jobs:
+  security-audit:
+    name: Run Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install gh-ghas-audit extension
+        run: |
+          gh extension install trevorspiniolas/gh-ghas-audit || true
+          gh extension list
+
+      - name: Run GHAS Audit
+        id: audit
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_READ_ORG }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Starting GHAS security audit..."
+          
+          # Determine repositories to audit
+          if [[ "${{ github.event.inputs.audit_scope }}" == "custom" ]]; then
+            REPOS="${{ github.event.inputs.custom_repos }}"
+          else
+            REPOS=""
+          fi
+          
+          # Run the audit script
+          node src/audit.js \
+            --org ${{ github.repository_owner }} \
+            --scope ${{ github.event.inputs.audit_scope || 'all' }} \
+            --repos "$REPOS" \
+            --output reports/audit-$(date +%Y%m%d-%H%M%S).json
+
+      - name: Generate Executive Dashboard
+        run: |
+          node src/generate-dashboard.js \
+            --input reports/audit-*.json \
+            --output reports/executive-dashboard.html
+
+      - name: Generate Metrics Report
+        uses: github/ghas-metrics-report@v1
+        with:
+          token: ${{ secrets.GH_PAT_READ_ORG }}
+          org: ${{ github.repository_owner }}
+          output-format: 'pdf,json'
+          output-dir: 'reports'
+
+      - name: Upload Audit Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-reports-${{ github.run_number }}
+          path: reports/
+          retention-days: 90
+
+      - name: Create Issue with Findings
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node src/create-issue.js \
+            --audit-file reports/audit-*.json \
+            --dashboard reports/executive-dashboard.html
+
+      - name: Post to Slack (if configured)
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          node src/notify-slack.js \
+            --audit-file reports/audit-*.json
+
+  compliance-check:
+    name: Compliance Verification
+    runs-on: ubuntu-latest
+    needs: security-audit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download audit reports
+        uses: actions/download-artifact@v4
+        with:
+          name: security-audit-reports-${{ github.run_number }}
+          path: reports/
+
+      - name: Check compliance status
+        run: |
+          node src/check-compliance.js \
+            --audit-file reports/audit-*.json \
+            --frameworks "OWASP,NIST,ISO27001"
+
+      - name: Update compliance badge
+        run: |
+          # Update README with compliance status
+          node src/update-badge.js
