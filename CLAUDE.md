@@ -4,63 +4,125 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a GitHub Advanced Security (GHAS) Audit Demo repository designed to:
-- Demonstrate automated security compliance workflows using GitHub Actions
-- Serve as a teaching tool for Pluralsight course on GHAS compliance automation
-- Provide a template for organizations to audit their GitHub security posture
+This is a complete GitHub Advanced Security (GHAS) Audit Automation Template designed for:
+- **Production Use**: Enterprise-grade security audit automation for organizations
+- **Education**: Pluralsight Module 4 course material for GHAS compliance automation
+- **Template**: Ready-to-fork solution for implementing security audits at scale
 
 ## Development Commands
 
-### Current State
-The project is in initial scaffolding phase. No build/test/lint commands are configured yet.
-
-When implementing features, you'll need to:
+### Setup and Installation
 ```bash
-# Install dependencies (when added to package.json)
+# Initial setup and configuration
 npm install
+npm run setup
 
-# No test/build/lint commands defined yet - these need to be implemented
+# Run security audit
+npm run audit
+
+# Generate executive dashboard
+npm run dashboard
+
+# Check compliance against frameworks
+node src/check-compliance.js --audit-file reports/audit-*.json --frameworks "OWASP,NIST,ISO27001"
 ```
+
+### Local Development
+```bash
+# Lint code
+npm run lint
+
+# Format code
+npm run format
+
+# Run specific audit scope
+node src/audit.js --org YOUR_ORG --scope critical
+
+# Generate custom dashboard
+node src/generate-dashboard.js --input reports/audit.json --output custom-dashboard.html
+```
+
+### GitHub Actions
+- **Manual Trigger**: Use "Run workflow" in Actions tab
+- **Scheduled**: Runs weekly on Mondays at 9 AM UTC
+- **Artifacts**: Download reports from workflow runs
 
 ## Architecture & Structure
 
-### Planned Architecture (from PRD)
-The repository should implement:
+### Implemented Architecture
+```
+ghas-audit-demo/
+├── .github/workflows/
+│   ├── ghas-audit.yml           # Main comprehensive audit workflow
+│   └── scheduled-audit.yml      # Daily quick security checks
+├── src/
+│   ├── audit.js                 # Core audit engine with CLI
+│   ├── generate-dashboard.js    # Visual dashboard generator
+│   ├── create-issue.js         # GitHub issue automation
+│   └── check-compliance.js     # Compliance framework mapping
+├── templates/
+│   └── executive-dashboard.md   # Markdown report template
+├── samples/payment-api/         # Intentionally vulnerable demo app
+├── scripts/
+│   └── setup.js                # Interactive setup wizard
+├── docs/
+│   ├── STUDENT_LAB_GUIDE.md    # 90-min hands-on lab
+│   └── SECURITY_BEST_PRACTICES.md
+└── reports/                     # Generated audit outputs
+```
 
-1. **GitHub Actions Workflows** (`.github/workflows/`)
-   - `audit-security.yml` - Main audit workflow
-   - `scheduled-audit.yml` - Scheduled security checks
-   - `report-generation.yml` - Dashboard/report generation
+### Core Features
 
-2. **Core Components**
-   - Integration with `gh-ghas-audit` CLI extension
-   - Automated reporting to Issues/Discussions
-   - Executive dashboard generation
-   - Sample vulnerable applications for demonstrations
+1. **Automated Security Audits**
+   - Multi-repository scanning across organizations
+   - Code scanning, secret scanning, and dependency analysis
+   - Configurable audit scopes (all, critical, custom)
 
-3. **Directory Structure** (to be implemented)
-   ```
-   ├── .github/workflows/    # GitHub Actions workflows
-   ├── scripts/             # CLI helper scripts
-   ├── templates/           # Report/dashboard templates
-   ├── samples/             # Vulnerable demo applications
-   ├── docs/                # Documentation
-   └── src/                 # Main application code
-   ```
+2. **Executive Dashboards**
+   - Visual charts with severity distribution
+   - Risk matrices and compliance scores
+   - Actionable recommendations with priorities
+
+3. **Compliance Mapping**
+   - OWASP Top 10 2021 controls
+   - NIST Cybersecurity Framework functions
+   - ISO 27001:2022 requirements
+
+4. **GitHub Integration**
+   - Automated issue creation with findings
+   - Workflow artifacts with downloadable reports
+   - Slack notifications for critical alerts
 
 ### Key Implementation Notes
 
-1. **Security Focus**: This is a security demonstration project. All code should follow security best practices and clearly document any intentional vulnerabilities in sample applications.
+1. **Security Architecture**: Uses fine-grained PATs with minimal permissions (`security_events:read`)
 
-2. **GitHub Integration**: Heavy reliance on GitHub APIs and Actions. Use the GitHub CLI (`gh`) and Actions toolkit where appropriate.
+2. **Compliance Frameworks**: Implements proven security control mappings with weighted scoring
 
-3. **Reporting**: Generate markdown reports compatible with GitHub Issues and Discussions.
+3. **Educational Design**: Clear code structure with extensive documentation for learning
 
-4. **Course Material**: Code should be clear and educational, suitable for students learning GHAS.
+4. **Production Ready**: Enterprise-grade error handling, logging, and reporting
+
+5. **Extensible**: Modular architecture allows easy customization for organization-specific needs
+
+## Sample Vulnerable Application
+
+The `samples/payment-api/` contains intentionally vulnerable Node.js code for demonstration:
+- **SQL Injection**: Vulnerable login endpoint
+- **Hardcoded Secrets**: JWT secrets and API keys
+- **Dependency Vulnerabilities**: Outdated lodash version
+- **Path Traversal**: Insecure file serving
+- **Command Injection**: Unsafe user input handling
+
+## Security Considerations
+
+- **Token Management**: Never commit tokens; use GitHub Secrets
+- **Permissions**: Follow principle of least privilege
+- **Report Distribution**: Be mindful of sensitive findings in reports
+- **Vulnerable Code**: Clearly marked and isolated in samples/ directory
 
 ## Reference Materials
 
-- `/reference/PRD.md` - Complete product requirements and implementation details
-- `/reference/WAYPOINT - GHAS (1).md` - Pluralsight course outline and learning objectives
-
-These documents contain the full vision and requirements for the project implementation.
+- `/docs/STUDENT_LAB_GUIDE.md` - Complete 90-minute hands-on lab for Module 4
+- `/docs/SECURITY_BEST_PRACTICES.md` - Enterprise implementation guidelines
+- `/reference/` - Original PRD and course outline materials

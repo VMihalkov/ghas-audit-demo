@@ -6,144 +6,101 @@ This diagram illustrates the end-to-end GitHub Advanced Security audit automatio
 ## Workflow Diagram
 
 ```mermaid
-flowchart TB
-    %% Styling
-    classDef github fill:#0366d6,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    classDef repo fill:#28a745,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    classDef workflow fill:#f6f8fa,stroke:#24292e,stroke-width:2px,color:#24292e
-    classDef engine fill:#ff6b6b,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    classDef api fill:#6f42c1,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    classDef compliance fill:#fd7e14,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    classDef output fill:#4ecdc4,stroke:#ffffff,stroke-width:2px,color:#ffffff
-    classDef deliverable fill:#ffd93d,stroke:#24292e,stroke-width:2px,color:#24292e
-
-    %% Main Flow
-    A[🏢 GitHub Organization] --> B[📦 GHAS Audit Demo Repo]
-    B --> C[⚡ GitHub Actions Workflow]
-
-    %% Audit Engine
-    C --> D[🔍 Audit Engine]
-    D --> E[🔌 GitHub APIs]
-
-    %% Data Collection
-    E --> F[🔒 CodeQL Alerts]
-    E --> G[🔑 Secret Scanning]
-    E --> H[📦 Dependabot Alerts]
-
-    %% Compliance Processing
-    D --> I[📋 Compliance Engine]
-    I --> J[🛡️ OWASP Top 10]
-    I --> K[🏛️ NIST Framework]
-    I --> L[📊 ISO 27001]
-
-    %% Risk Assessment
-    D --> M[⚖️ Risk Assessment]
-    M --> N[🚨 Severity Analysis]
-    M --> O[📈 Repository Scoring]
-
-    %% Report Generation
-    D --> P[📊 Report Generation]
-    P --> Q[📄 JSON Audit Report]
-    P --> R[📋 Executive Dashboard]
-
-    %% Visualizations
-    R --> S[📊 Chart.js Visualizations]
-    S --> T[🥧 Severity Distribution]
-    S --> U[📊 Alert Types]
-    S --> V[🎯 Compliance Scores]
-
-    %% Executive Output
-    R --> W[📋 Executive Summary]
-    R --> X[💡 Risk Recommendations]
-
-    %% Artifacts
-    Q --> Y[📦 GitHub Artifacts]
-    R --> Y
-
-    %% Final Deliverable
-    Y --> Z[🎓 Student Lab Deliverable]
-
-    %% Apply Styling
-    class A github
-    class B repo
-    class C workflow
-    class D engine
-    class E,F,G,H api
-    class I,J,K,L compliance
-    class M,N,O workflow
-    class P,Q,R output
-    class S,T,U,V output
-    class W,X output
-    class Y,Z deliverable
-
-    %% Subgraph for better organization
-    subgraph "Data Collection Layer"
-        F
-        G
-        H
-    end
-
-    subgraph "Compliance Framework Mapping"
-        J
-        K
-        L
-    end
-
-    subgraph "Risk Analysis"
-        N
-        O
-    end
-
-    subgraph "Visualization Layer"
-        T
-        U
-        V
-    end
-
-    subgraph "Executive Output"
-        W
-        X
-    end
+flowchart TD
+    %% Module 4 Learning-Focused GHAS Audit Flow
+    
+    A[🎯 Start Audit] --> B[🔍 Scan Repositories]
+    
+    B --> C{GHAS Features Enabled?}
+    C -->|Yes| D[📊 Collect Security Data]
+    C -->|No| E[⚠️ Enable GHAS Features]
+    E --> D
+    
+    D --> F[Code Scanning]
+    D --> G[Secret Scanning] 
+    D --> H[Dependency Scanning]
+    
+    F --> I[🎯 Calculate Risk Score]
+    G --> I
+    H --> I
+    
+    I --> J[📋 Check Compliance]
+    J --> K[OWASP Score]
+    J --> L[NIST Score]
+    J --> M[ISO Score]
+    
+    K --> N[📊 Generate Dashboard]
+    L --> N
+    M --> N
+    
+    N --> O[📈 Executive Summary]
+    N --> P[🛠️ Recommendations]
+    
+    O --> Q[✅ Audit Complete]
+    P --> Q
+    
+    Q --> R[📤 Present to Leadership]
+    
+    %% Styling for clarity
+    classDef startEnd fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    classDef process fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef decision fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    classDef ghasFeature fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef compliance fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef output fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    
+    class A,Q,R startEnd
+    class B,D,I,N process
+    class C decision
+    class F,G,H ghasFeature
+    class J,K,L,M compliance
+    class O,P output
+    class E process
 ```
 
-## Key Components
+## Module 4 Learning Flow
 
-### 🔍 **Audit Engine**
-- **Core processing** for security data collection
-- **API integration** with GitHub Advanced Security
-- **Risk calculation** and scoring algorithms
+This simplified workflow focuses on the core learning objectives for conducting a final security audit:
 
-### 📋 **Compliance Engine**
-- **OWASP Top 10** vulnerability mapping
-- **NIST Cybersecurity Framework** alignment
-- **ISO 27001** control mapping
+### 🎯 **Phase 1: Discovery & Setup**
+- **Start Audit** - Initiate comprehensive security assessment
+- **Scan Repositories** - Identify all repositories in scope
+- **Check GHAS Features** - Verify security scanning is enabled
 
-### 📊 **Report Generation**
-- **JSON structured data** for programmatic access
-- **Executive dashboard** with interactive charts
-- **Compliance evidence** for audit readiness
+### 🔍 **Phase 2: Data Collection**
+- **Code Scanning** - Static analysis for vulnerabilities
+- **Secret Scanning** - Detect exposed credentials and keys  
+- **Dependency Scanning** - Find vulnerable packages and libraries
 
-### 🎯 **Student Deliverables**
-- **Forkable template** for hands-on learning
-- **Customizable workflow** for different organizations
-- **Production-ready** audit automation
+### 📊 **Phase 3: Risk Assessment**
+- **Calculate Risk Score** - Aggregate findings by severity
+- **Check Compliance** - Map findings to security frameworks
+- **Generate Framework Scores** - OWASP, NIST, ISO compliance ratings
 
-## Usage Notes
+### 📈 **Phase 4: Executive Reporting**
+- **Generate Dashboard** - Visual charts and risk matrices
+- **Executive Summary** - Business-focused findings overview
+- **Recommendations** - Prioritized action items with timelines
 
-- **Update organization name** in workflow configuration
-- **Modify compliance mappings** as frameworks evolve
-- **Add new visualization types** as needed
-- **Extend API integrations** for additional tools
+### 🎓 **Phase 5: Presentation**
+- **Present to Leadership** - Communicate findings and next steps
+
+## Student Learning Checkpoints
+
+✅ **Checkpoint 1**: Successfully enable GHAS features  
+✅ **Checkpoint 2**: Collect security data from all three scanning types  
+✅ **Checkpoint 3**: Calculate meaningful risk and compliance scores  
+✅ **Checkpoint 4**: Generate executive-ready dashboard  
+✅ **Checkpoint 5**: Present findings with clear recommendations  
 
 ## Color Legend
 
-- 🔵 **GitHub** - Source systems and repositories
-- 🟢 **Repository** - Template and configuration
-- 🔴 **Engine** - Core processing components
-- 🟣 **API** - Data collection interfaces
-- 🟠 **Compliance** - Framework alignment
-- 🔵 **Output** - Reports and visualizations
-- 🟡 **Deliverable** - Student lab artifacts
+- 🔵 **Start/End** - Beginning and completion points
+- 🟣 **Process** - Core audit activities  
+- 🟠 **Decision** - Critical checkpoints requiring action
+- 🟢 **GHAS Features** - GitHub Advanced Security capabilities
+- 🔴 **Compliance** - Framework alignment activities
+- 🔵 **Output** - Reports and deliverables
 
 ---
 
