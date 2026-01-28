@@ -81,7 +81,7 @@ jobs:
             --output reports/executive-dashboard.html
 
       - name: Generate Metrics Report
-        uses: github/ghas-metrics-report@v1
+        uses: theztefan/ghas-metrics-report@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           org: ${{ github.repository_owner }}
