@@ -26,7 +26,7 @@ program
   .option('-s, --scope <scope>', 'Audit scope (all, critical, custom)', 'all')
   .option('-r, --repos <repos>', 'Specific repositories to audit (comma-separated)')
   .option('--output <file>', 'Output file for audit results', `reports/audit-${new Date().toISOString().slice(0, 10)}.json`)
-  .option('--token <token>', 'GitHub token', process.env.GH_PAT_READ_ORG)
+  .option('--token <token>', 'GitHub token', process.env.GITHUB_TOKEN)
   .parse();
 
 const options = program.opts();
