@@ -83,7 +83,7 @@ jobs:
       - name: Generate Metrics Report
         uses: github/ghas-metrics-report@v1
         with:
-          token: ${{ secrets.GH_PAT_READ_ORG }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           org: ${{ github.repository_owner }}
           output-format: 'pdf,json'
           output-dir: 'reports'
