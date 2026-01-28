@@ -52,13 +52,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh extension install trevorspiniolas/gh-ghas-audit || true
+          gh extension install advanced-security/gh-ghas-audit || true
           gh extension list
 
       - name: Run GHAS Audit
         id: audit
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT_READ_ORG }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Starting GHAS security audit..."
